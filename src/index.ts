@@ -1,4 +1,9 @@
 import express from "express";
+import { config } from "dotenv";
+import { connectToDatabase } from "./database";
+
+config();
+connectToDatabase();
 
 const app = express();
 const port = 3000;
