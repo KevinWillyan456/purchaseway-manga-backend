@@ -5,10 +5,11 @@ import {
     storeManga,
     updateManga,
 } from "./controllers/MangaController";
+import ApiKeyMiddleware from "./middlewares/apiKeyMiddleware";
 
 export const routes = express.Router();
 
-routes.get("/manga", indexManga);
-routes.post("/manga", storeManga);
-routes.put("/manga/:id", updateManga);
-routes.delete("/manga/:id", deleteManga);
+routes.get("/manga", ApiKeyMiddleware, indexManga);
+routes.post("/manga", ApiKeyMiddleware, storeManga);
+routes.put("/manga/:id", ApiKeyMiddleware, updateManga);
+routes.delete("/manga/:id", ApiKeyMiddleware, deleteManga);

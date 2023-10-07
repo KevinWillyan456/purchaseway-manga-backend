@@ -1,11 +1,13 @@
 import { Schema, model, Document } from "mongoose";
 
 interface Pagina {
+    _id: string;
     numero: number;
     path: string;
 }
 
 interface Capitulo {
+    _id: string;
     numero: number;
     paginas: Pagina[];
 }
@@ -31,7 +33,7 @@ const capituloSchema = new Schema({
 
 const mangaSchema = new Schema({
     _id: { type: String, required: true },
-    titulo: { type: String, required: true },
+    titulo: { type: String, required: true, unique: true },
     capa: { type: String, required: true },
     genero: { type: String, required: true },
     dataDeAdicao: { type: Date, required: true },
