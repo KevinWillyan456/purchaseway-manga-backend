@@ -5,7 +5,7 @@ import {
     storeManga,
     updateManga,
 } from "./controllers/MangaController";
-import ApiKeyMiddleware from "./middlewares/apiKeyMiddleware";
+import ApiKeyMiddleware from "./middlewares/ApiKeyMiddleware";
 
 export const routes = express.Router();
 
