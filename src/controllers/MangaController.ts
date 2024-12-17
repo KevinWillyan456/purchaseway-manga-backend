@@ -1,24 +1,25 @@
-import { Request, Response } from "express";
-import { UpdateWithAggregationPipeline } from "mongoose";
-import { v4 as uuid } from "uuid";
-import Manga from "../models/Manga";
+import { Request, Response } from 'express'
+import { UpdateWithAggregationPipeline } from 'mongoose'
+import { v4 as uuid } from 'uuid'
+import Manga from '../models/Manga'
 
 async function indexManga(req: Request, res: Response) {
     try {
         const mangas = await Manga.find()
             .sort({ title: 1 })
-            .collation({ locale: "pt", strength: 2 });
-        return res.status(200).json({ mangas });
+            .collation({ locale: 'pt', strength: 2 })
+        res.status(200).json({ mangas })
     } catch (err) {
-        res.status(500).json({ error: err });
+        res.status(500).json({ error: err })
     }
 }
 
 async function storeManga(req: Request, res: Response) {
-    const { titulo, capa, genero } = req.body;
+    const { titulo, capa, genero } = req.body
 
     if (!titulo || !capa || !genero) {
-        return res.status(400).json({ error: "data is missing" });
+        res.status(400).json({ error: 'data is missing' })
+        return
     }
 
     const manga = new Manga({
@@ -27,14 +28,14 @@ async function storeManga(req: Request, res: Response) {
         capa,
         genero,
         dataDeAdicao: new Date(),
-    });
+    })
 
     try {
-        await manga.save();
+        await manga.save()
 
-        return res.status(201).json({ message: "Mangá added successfully!" });
+        res.status(201).json({ message: 'Mangá added successfully!' })
     } catch (err) {
-        res.status(400).json({ error: err });
+        res.status(400).json({ error: err })
     }
 }
 
@@ -42,14 +43,15 @@ async function updateManga(
     req: Request<{ id?: UpdateWithAggregationPipeline }>,
     res: Response
 ) {
-    const { titulo, capa, genero, capitulos } = req.body;
-    const { id } = req.params;
+    const { titulo, capa, genero, capitulos } = req.body
+    const { id } = req.params
 
     if (!titulo && !capa && !genero && !capitulos) {
-        return res.status(400).json({ error: "You must enter a new data" });
+        res.status(400).json({ error: 'You must enter a new data' })
+        return
     }
 
-    const filter = { _id: id };
+    const filter = { _id: id }
     const updateDoc = {
         $set: {
             titulo,
@@ -57,14 +59,13 @@ async function updateManga(
             genero,
             capitulos,
         },
-    };
+    }
 
     try {
-        await Manga.updateOne(filter, updateDoc);
-
-        return res.status(200).json({ message: "Mangá updated successfully!" });
+        await Manga.updateOne(filter, updateDoc)
+        res.status(200).json({ message: 'Mangá updated successfully!' })
     } catch (err) {
-        res.status(500).json({ error: err });
+        res.status(500).json({ error: err })
     }
 }
 
@@ -72,15 +73,15 @@ async function deleteManga(
     req: Request<{ id?: UpdateWithAggregationPipeline }>,
     res: Response
 ) {
-    const { id } = req.params;
-    const filter = { _id: id };
+    const { id } = req.params
+    const filter = { _id: id }
 
     try {
-        await Manga.deleteOne(filter);
-        return res.status(200).json({ message: "Mangá removed successfully!" });
+        await Manga.deleteOne(filter)
+        res.status(200).json({ message: 'Mangá removed successfully!' })
     } catch (err) {
-        return res.status(500).json({ error: err });
+        res.status(500).json({ error: err })
     }
 }
 
-export { indexManga, storeManga, updateManga, deleteManga };
+export { deleteManga, indexManga, storeManga, updateManga }
